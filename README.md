@@ -140,6 +140,12 @@ await listenMany(
 
 The Electron helper (`setup` / `START_NOTIFICATION_SERVICE`) manages a single Firebase project. For multiple senders, use the core `register` / `listen` (or `registerMany` / `listenMany`) APIs above and persist credentials yourself.
 
+## Troubleshooting
+
+### `Error=PHONE_REGISTRATION_ERROR`
+
+Google's GCM check-in/register flow can return this transiently right after a new `android_id` is created. The library retries with exponential backoff and periodic re-check-in. If it still fails after several attempts, wait a few seconds and call `register()` again (or send `RESET_NOTIFICATION_SERVICE` then restart the Electron notification service).
+
 ## Development
 
 1. Make sure you have the right Node.js version installed (specified in `.nvmrc` file)
