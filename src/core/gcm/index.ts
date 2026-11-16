@@ -12,6 +12,7 @@ import {
   shouldRecheckIn,
 } from '../utils/gcm-retry.js';
 import { loadProtoJson } from '../utils/load-proto.js';
+import { toAxiosTlsOptions, type TlsConfig } from '../utils/tls-options.js';
 import { waitFor } from '../utils/timeout.js';
 import checkinDescriptor from './checkin.json';
 
@@ -38,20 +39,29 @@ export interface GCMRegistrationResult extends CheckInOptions {
   appId: string;
 }
 
-export async function registerGCM(appId: string): Promise<GCMRegistrationResult> {
-  let options = await checkIn();
+export async function registerGCM(appId: string, tls?: TlsConfig): Promise<GCMRegistrationResult> {
+  let options = await checkIn(undefined, undefined, tls);
   // NOTE: Google may return PHONE_REGISTRATION_ERROR until a new android_id propagates
   await waitFor(POST_CHECKIN_DELAY_MS);
-  const credentials = await doRegister(options, appId, async () => {
-    options = await checkIn(options.androidId, options.securityToken);
-    await waitFor(POST_CHECKIN_DELAY_MS);
-    return options;
-  });
+  const credentials = await doRegister(
+    options,
+    appId,
+    async () => {
+      options = await checkIn(options.androidId, options.securityToken, tls);
+      await waitFor(POST_CHECKIN_DELAY_MS);
+      return options;
+    },
+    tls,
+  );
 
   return credentials;
 }
 
-export async function checkIn(androidId?: string, securityToken?: string): Promise<CheckInOptions> {
+export async function checkIn(
+  androidId?: string,
+  securityToken?: string,
+  tls?: TlsConfig,
+): Promise<CheckInOptions> {
   await loadProtoFile();
 
   const buffer = getCheckinRequest(androidId, securityToken);
@@ -61,6 +71,7 @@ export async function checkIn(androidId?: string, securityToken?: string): Promi
       'Content-Type': 'application/x-protobuf',
     },
     responseType: 'arraybuffer',
+    ...toAxiosTlsOptions(tls),
   });
   const body = new Uint8Array(response.data);
 
@@ -79,6 +90,7 @@ async function doRegister(
   checkInOptions: CheckInOptions,
   appId: string,
   recheckIn: () => Promise<CheckInOptions>,
+  tls?: TlsConfig,
 ): Promise<GCMRegistrationResult> {
   let { androidId, securityToken } = checkInOptions;
   const body = {
@@ -91,6 +103,7 @@ async function doRegister(
   const response = await postRegister({
     getAuth: () => ({ androidId, securityToken }),
     body,
+    tls,
     onTransientFailure: async (retry) => {
       if (shouldRecheckIn(retry)) {
         const refreshed = await recheckIn();
@@ -114,6 +127,7 @@ interface PostRegisterOptions {
   getAuth: () => { androidId: string; securityToken: string };
   body: Record<string, string>;
   retry?: number;
+  tls?: TlsConfig;
   onTransientFailure?: (retry: number) => Promise<void>;
 }
 
@@ -121,6 +135,7 @@ async function postRegister({
   getAuth,
   body,
   retry = 0,
+  tls,
   onTransientFailure,
 }: PostRegisterOptions): Promise<string> {
   const { androidId, securityToken } = getAuth();
@@ -132,6 +147,7 @@ async function postRegister({
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3234.0 Safari/537.36',
     },
     responseType: 'text',
+    ...toAxiosTlsOptions(tls),
   });
   const responseBody = response.data;
 
@@ -146,7 +162,7 @@ async function postRegister({
     await onTransientFailure?.(retry + 1);
     await waitFor(getGcmRetryDelayMs(retry));
 
-    return postRegister({ getAuth, body, retry: retry + 1, onTransientFailure });
+    return postRegister({ getAuth, body, retry: retry + 1, tls, onTransientFailure });
   }
 
   return responseBody;

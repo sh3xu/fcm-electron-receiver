@@ -11,6 +11,7 @@ import { kMCSVersion, MCSProtoTag } from './utils/constants.js';
 import { loadProtoJson } from './utils/load-proto.js';
 import mcsDescriptor from './utils/mcs.json';
 import Parser from './utils/parser.js';
+import { toTlsConnectOptions, type TlsConfig } from './utils/tls-options.js';
 
 const HOST = 'mtalk.google.com';
 const PORT = 5228;
@@ -52,6 +53,7 @@ export class Client extends EventEmitter {
   private _socket: tls.TLSSocket | null;
   private _parser: Parser | null;
   private _retryInterval: NodeJS.Timeout | null;
+  private _tls: TlsConfig | undefined;
 
   static async init(): Promise<void> {
     if (proto) {
@@ -60,7 +62,7 @@ export class Client extends EventEmitter {
     proto = loadProtoJson(mcsDescriptor);
   }
 
-  constructor(credentials: ClientCredentials, persistentIds: string[]) {
+  constructor(credentials: ClientCredentials, persistentIds: string[], tlsConfig?: TlsConfig) {
     super();
     this._credentials = credentials;
     this._persistentIds = persistentIds;
@@ -68,6 +70,7 @@ export class Client extends EventEmitter {
     this._socket = null;
     this._parser = null;
     this._retryInterval = null;
+    this._tls = tlsConfig;
   }
 
   async connect(): Promise<void> {
@@ -99,17 +102,15 @@ export class Client extends EventEmitter {
   }
 
   private async _checkIn(): Promise<CheckInOptions> {
-    return checkIn(this._credentials.gcm.androidId, this._credentials.gcm.securityToken);
+    return checkIn(this._credentials.gcm.androidId, this._credentials.gcm.securityToken, this._tls);
   }
 
   private _connect(): void {
-    // @ts-ignore
-    this._socket = new tls.TLSSocket();
+    this._socket = tls.connect(toTlsConnectOptions(HOST, PORT, this._tls));
     this._socket.setKeepAlive(true);
-    this._socket.on('connect', this._onSocketConnect);
+    this._socket.on('secureConnect', this._onSocketConnect);
     this._socket.on('close', this._onSocketClose);
     this._socket.on('error', this._onSocketError);
-    this._socket.connect({ host: HOST, port: PORT });
     this._socket.write(this._loginBuffer());
   }
 
@@ -118,7 +119,7 @@ export class Client extends EventEmitter {
       clearInterval(this._retryInterval);
     }
     if (this._socket) {
-      this._socket.removeListener('connect', this._onSocketConnect);
+      this._socket.removeListener('secureConnect', this._onSocketConnect);
       this._socket.removeListener('close', this._onSocketClose);
       this._socket.removeListener('error', this._onSocketError);
       this._socket.destroy();

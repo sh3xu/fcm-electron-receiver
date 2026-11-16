@@ -3,6 +3,7 @@ import crypto from 'crypto';
 
 import { escape } from '../utils/base64.js';
 import { type FirebaseCredentials } from '../register.js';
+import { toAxiosTlsOptions, type TlsConfig } from '../utils/tls-options.js';
 
 const FCM_ENDPOINT = 'https://fcm.googleapis.com/fcm/send';
 const FCM_REGISTRATION_ENDPOINT = 'https://fcmregistrations.googleapis.com/v1';
@@ -20,12 +21,15 @@ export interface FCMRegistrationResult {
 }
 
 let credentials: FirebaseCredentials;
+let tlsConfig: TlsConfig | undefined;
 
 export async function registerFCM(
   gcmToken: string,
   firebaseCredentials: FirebaseCredentials,
+  tls?: TlsConfig,
 ): Promise<FCMRegistrationResult> {
   credentials = firebaseCredentials;
+  tlsConfig = tls;
   const keys = await createKeys();
   const installationAuthToken = await installRequest();
   const fcmToken = await registerRequest(installationAuthToken, gcmToken, keys);
@@ -75,6 +79,7 @@ async function registerRequest(
         'x-goog-api-key': credentials.apiKey,
         'x-goog-firebase-installations-auth': installationAuthToken,
       },
+      ...toAxiosTlsOptions(tlsConfig),
     },
   );
 
@@ -110,6 +115,7 @@ async function installRequest(): Promise<string> {
         ).toString('base64'),
         'x-goog-api-key': credentials.apiKey,
       },
+      ...toAxiosTlsOptions(tlsConfig),
     },
   );
 
