@@ -1,0 +1,29 @@
+src/core/utils/decrypt.test.ts
+  s_747067564f4cd7::t_bc016bd124aa72 27
+  s_747067564f4cd7::t_ba8f960ca75614 1-26,28-102
+src/core/utils/decrypt.ts
+  s_747067564f4cd7::t_ff0b2b7fd2fc85 25-31,35,37
+src/core/utils/http_ece.d.ts
+  s_747067564f4cd7::t_2855588b40f223 5,11,15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0474089bb88063d0867a599c167bbf4dea020e55",
+  "prompts": {},
+  "humans": {
+    "h_54cccc4af8e4fc": {
+      "author": "sh3xu <s43khu@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_747067564f4cd7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a19d7632-9106-469f-a736-2f847473093c",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
