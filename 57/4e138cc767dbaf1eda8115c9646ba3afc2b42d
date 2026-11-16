@@ -1,0 +1,30 @@
+src/core/utils/gcm-retry.ts
+  s_747067564f4cd7::t_8f9951d0dca1b4 1-23
+src/core/utils/gcm-retry.test.ts
+  s_747067564f4cd7::t_bb6853a32dd46c 1-30
+src/core/gcm/index.ts
+  s_747067564f4cd7::t_439ad51373d14d 8-14,17,41-48,79-84,92-103,115,118,121-127,134,142-144,146-148,150
+README.md
+  s_747067564f4cd7::t_7af37e648b3985 97-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "574e138cc767dbaf1eda8115c9646ba3afc2b42d",
+  "prompts": {},
+  "humans": {
+    "h_54cccc4af8e4fc": {
+      "author": "sh3xu <s43khu@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_747067564f4cd7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a19d7632-9106-469f-a736-2f847473093c",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
