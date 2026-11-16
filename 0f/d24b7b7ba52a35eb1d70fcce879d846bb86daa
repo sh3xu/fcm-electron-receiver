@@ -1,0 +1,48 @@
+src/core/gcm/index.ts
+  s_747067564f4cd7::t_f6c3b1c31602be 130-131,140-141
+  s_747067564f4cd7::t_e3072027ee8f7c 8-14,17,41-48,77-82,90-101,113,116,119-125,142,144-146,148
+LICENSE
+  s_747067564f4cd7::t_93eae224834a07 4,22
+README.md
+  s_747067564f4cd7::t_131f3d7b400f3b 1,5-14,18,28,44,84-86,88,90,92-93,95,98-99,102,104-147
+package-lock.json
+  s_747067564f4cd7::t_caf0e382aca14e 2,8
+package.json
+  s_747067564f4cd7::t_908ea31720b730 2,4,14,16,18-22,25
+src/core/listen-many.test.ts
+  s_747067564f4cd7::t_cc1ac3ee6e2928 1-34
+src/core/listen-many.ts
+  s_747067564f4cd7::t_81745dff4e6f8c 1-13
+src/core/register-many.test.ts
+  s_747067564f4cd7::t_f27601252923de 1-26
+src/core/register-many.ts
+  s_747067564f4cd7::t_b15f21c1325eb5 1-7
+src/core/utils/decrypt.test.ts
+  s_747067564f4cd7::t_8cebfcd1dd6de4 1-102
+src/core/utils/decrypt.ts
+  s_747067564f4cd7::t_6c161d22d993af 25-31,35,37
+src/core/utils/gcm-retry.test.ts
+  s_747067564f4cd7::t_d00a4dfba63926 1-30
+src/core/utils/gcm-retry.ts
+  s_747067564f4cd7::t_f3e076180dbfc1 1-23
+src/core/utils/http_ece.d.ts
+  s_747067564f4cd7::t_159abd44ee83da 5,11,15
+src/index.ts
+  s_747067564f4cd7::t_e6e061759728c5 2,4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0fd24b7b7ba52a35eb1d70fcce879d846bb86daa",
+  "prompts": {},
+  "sessions": {
+    "s_747067564f4cd7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a19d7632-9106-469f-a736-2f847473093c",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
