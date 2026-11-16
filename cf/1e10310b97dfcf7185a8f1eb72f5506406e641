@@ -1,0 +1,19 @@
+src/core/listen-many.ts
+  s_747067564f4cd7::t_be45893f8a5439 5,12,14-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cf1e10310b97dfcf7185a8f1eb72f5506406e641",
+  "prompts": {},
+  "sessions": {
+    "s_747067564f4cd7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a19d7632-9106-469f-a736-2f847473093c",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
