@@ -1,0 +1,35 @@
+README.md
+  s_747067564f4cd7::t_cebc6c085733bc 97-133
+src/index.ts
+  s_747067564f4cd7::t_fef5d835213029 2,4
+src/core/register-many.ts
+  s_747067564f4cd7::t_64f6e88dc102f1 1-7
+src/core/register-many.test.ts
+  s_747067564f4cd7::t_3d8dd6221815d4 1-26
+src/core/listen-many.test.ts
+  s_747067564f4cd7::t_c8d4eae7f5bf52 1-34
+src/core/listen-many.ts
+  s_747067564f4cd7::t_343859368f2f5f 1-2,4-11,13
+  s_747067564f4cd7::t_ab286564872b53 3,12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5652bc222e0edb18110c0c2f3ac481c91f21275c",
+  "prompts": {},
+  "humans": {
+    "h_54cccc4af8e4fc": {
+      "author": "sh3xu <s43khu@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_747067564f4cd7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a19d7632-9106-469f-a736-2f847473093c",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
