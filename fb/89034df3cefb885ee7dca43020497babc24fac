@@ -1,0 +1,19 @@
+src/core/gcm/index.ts
+  s_747067564f4cd7::t_c602a90201ae4c 42-49,86,88,91,99-111,123,127,131,135,137,144-145,154-156,158-160,162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fb89034df3cefb885ee7dca43020497babc24fac",
+  "prompts": {},
+  "sessions": {
+    "s_747067564f4cd7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a19d7632-9106-469f-a736-2f847473093c",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
