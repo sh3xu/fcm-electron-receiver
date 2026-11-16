@@ -1,0 +1,52 @@
+src/core/utils/tls-options.test.ts
+  s_747067564f4cd7::t_b4260e686a77aa 1-37
+src/electron/consts.ts
+  s_747067564f4cd7::t_3c974a0ac44427 4-6,18-20
+src/core/gcm/index.ts
+  s_747067564f4cd7::t_87de3efaadec8a 72-76,84,100,103-109,118,129
+  s_747067564f4cd7::t_2cbdac103f1771 34-36,41-45,58
+  s_747067564f4cd7::t_18736a143acdfc 8
+src/core/client.ts
+  s_747067564f4cd7::t_3c81f50d7861cc 104,108,110
+  s_747067564f4cd7::t_f076dd5c97c8e9 121
+  s_747067564f4cd7::t_6de8abfbe7f606 55,64,72
+  s_747067564f4cd7::t_e620691dda868b 13
+src/core/fcm/index.ts
+  s_747067564f4cd7::t_4a4561944bc723 6
+  s_747067564f4cd7::t_b119a14dc7dec2 82
+  s_747067564f4cd7::t_11b4d78c5669d3 24,29,32
+  s_747067564f4cd7::t_a57d921461e8c4 117
+src/electron/index.ts
+  s_747067564f4cd7::t_3bd51241f57b2a 6,11,13,20-23,30-31,55,64,69,74-81,101,103
+README.md
+  s_747067564f4cd7::t_adfa1d04780250 30,33,46-48,61-63,66-93
+src/core/register.ts
+  s_747067564f4cd7::t_640581a61b1da1 5,19-26,29-30
+src/index.ts
+  s_747067564f4cd7::t_1d87d4b95fb2e0 4,7,10
+src/core/utils/tls-options.ts
+  s_747067564f4cd7::t_860acf991e70e8 1-36
+src/core/listen.ts
+  s_747067564f4cd7::t_b3a3438bbff81c 4,21-24,28,30-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7a844687217eee77bff7678af1aae01d6d89a177",
+  "prompts": {},
+  "humans": {
+    "h_54cccc4af8e4fc": {
+      "author": "sh3xu <s43khu@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_747067564f4cd7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a19d7632-9106-469f-a736-2f847473093c",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
