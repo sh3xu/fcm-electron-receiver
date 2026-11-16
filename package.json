@@ -1,7 +1,7 @@
 {
-  "name": "firebase-electron",
+  "name": "fcm-electron-receiver",
   "version": "1.1.0",
-  "description": "Receive a Firebase notifications in your Electron app",
+  "description": "Receive Firebase notifications in your Electron app (independent maintained version)",
   "keywords": [
     "firebase",
     "electron",
@@ -11,14 +11,18 @@
     "nodejs",
     "notifications"
   ],
-  "homepage": "https://github.com/rixcian/firebase-electron",
+  "homepage": "https://github.com/sh3xu/fcm-electron-receiver",
   "bugs": {
-    "url": "https://github.com/rixcian/firebase-electron/issues"
+    "url": "https://github.com/sh3xu/fcm-electron-receiver/issues"
   },
-  "author": "rixcian <rostislav.kremecek@protonmail.com> (https://rixcian.dev)",
+  "author": "sh3xu (https://github.com/sh3xu)",
+  "contributors": [
+    "rixcian <rostislav.kremecek@protonmail.com> (https://rixcian.dev)",
+    "Matthieu Lemoine"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rixcian/firebase-electron.git"
+    "url": "git+https://github.com/sh3xu/fcm-electron-receiver.git"
   },
   "files": [
     "dist"
