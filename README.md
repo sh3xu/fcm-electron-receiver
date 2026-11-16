@@ -117,6 +117,10 @@ Also make sure these hosts are reachable on port `443` (registration) and `5228`
 9. (Optional) Copy the `vapidKey` listed under the `Cloud Messaging` tab and `Web Configuration > Web Push certificates` section
 10. (Optional) Generate a new `key pair` and use the value in the `Key pair` column as your `vapidKey`
 
+## Webpack / Electron Forge
+
+Protobuf definitions are embedded in the compiled JS bundle, so you do **not** need to copy `.proto` files with `CopyWebpackPlugin` or similar. If you previously added copy rules for `checkin.proto` / `mcs.proto`, you can remove them.
+
 ## Moving from `electron-push-receiver` / `firebase-electron`
 
 [`electron-push-receiver`](https://github.com/MatthieuLemoine/electron-push-receiver) stopped working because it depends on the [Legacy FCM API](https://firebase.google.com/docs/cloud-messaging/migrate-v1) which was deprecated on June 21st, 2024 by Google.
@@ -145,7 +149,7 @@ The old Legacy FCM subscribe flow accepted only a numeric `senderId` (also calle
 
 Use the Firebase **web app** configuration for the project you want to receive from:
 
-| Old (`electron-push-receiver`) | New (`firebase-electron`) |
+| Old (`electron-push-receiver`) | New (`fcm-electron-receiver`) |
 | --- | --- |
 | `senderId` | `projectId` + `apiKey` + `appId` (+ optional `vapidKey`) |
 
@@ -156,7 +160,7 @@ The numeric sender ID still appears inside `appId` as `1:<senderId>:web:<hash>`,
 To receive pushes from another Firebase project (a "third-party sender"), you need that project's web credentials (`appId`, `apiKey`, `projectId`, optional `vapidKey`). Register once per project and listen to each credential set:
 
 ```typescript
-import { registerMany, listenMany } from 'firebase-electron';
+import { registerMany, listenMany } from 'fcm-electron-receiver';
 
 const projects = [
   { appId: myAppId, apiKey: myApiKey, projectId: myProjectId, vapidKey: myVapidKey },

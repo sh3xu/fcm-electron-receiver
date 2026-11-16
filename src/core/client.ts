@@ -1,6 +1,5 @@
 import EventEmitter from 'events';
 import Long from 'long';
-import path from 'path';
 import tls from 'tls';
 import net from 'net';
 import protobuf from 'protobufjs';
@@ -9,6 +8,8 @@ import { EVENTS } from './events.d.js';
 import { checkIn, type CheckInOptions } from './gcm/index.js';
 import { decrypt } from './utils/decrypt.js';
 import { kMCSVersion, MCSProtoTag } from './utils/constants.js';
+import { loadProtoJson } from './utils/load-proto.js';
+import mcsDescriptor from './utils/mcs.json';
 import Parser from './utils/parser.js';
 import { toTlsConnectOptions, type TlsConfig } from './utils/tls-options.js';
 
@@ -58,7 +59,7 @@ export class Client extends EventEmitter {
     if (proto) {
       return;
     }
-    proto = await protobuf.load(path.resolve(__dirname, 'utils', 'mcs.proto'));
+    proto = loadProtoJson(mcsDescriptor);
   }
 
   constructor(credentials: ClientCredentials, persistentIds: string[], tlsConfig?: TlsConfig) {

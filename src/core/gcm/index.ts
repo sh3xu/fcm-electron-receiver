@@ -1,7 +1,6 @@
+import axios from 'axios';
 import Long from 'long';
-import path from 'path';
 import protobuf from 'protobufjs';
-import request from 'request-promise';
 
 import fcmKey from '../fcm/server-key.js';
 import { toBase64 } from '../utils/base64.js';
@@ -12,8 +11,10 @@ import {
   POST_CHECKIN_DELAY_MS,
   shouldRecheckIn,
 } from '../utils/gcm-retry.js';
-import { toRequestTlsOptions, type TlsConfig } from '../utils/tls-options.js';
+import { loadProtoJson } from '../utils/load-proto.js';
+import { toAxiosTlsOptions, type TlsConfig } from '../utils/tls-options.js';
 import { waitFor } from '../utils/timeout.js';
+import checkinDescriptor from './checkin.json';
 
 // HACK: fix PHONE_REGISTRATION_ERROR when bundled with webpack
 // https://github.com/dcodeIO/protobuf.js#browserify-integration
@@ -42,11 +43,16 @@ export async function registerGCM(appId: string, tls?: TlsConfig): Promise<GCMRe
   let options = await checkIn(undefined, undefined, tls);
   // NOTE: Google may return PHONE_REGISTRATION_ERROR until a new android_id propagates
   await waitFor(POST_CHECKIN_DELAY_MS);
-  const credentials = await doRegister(options, appId, async () => {
-    options = await checkIn(options.androidId, options.securityToken, tls);
-    await waitFor(POST_CHECKIN_DELAY_MS);
-    return options;
-  }, tls);
+  const credentials = await doRegister(
+    options,
+    appId,
+    async () => {
+      options = await checkIn(options.androidId, options.securityToken, tls);
+      await waitFor(POST_CHECKIN_DELAY_MS);
+      return options;
+    },
+    tls,
+  );
 
   return credentials;
 }
@@ -60,16 +66,14 @@ export async function checkIn(
 
   const buffer = getCheckinRequest(androidId, securityToken);
 
-  const body = await request({
-    url: CHECKIN_URL,
-    method: 'POST',
+  const response = await axios.post<ArrayBuffer>(CHECKIN_URL, buffer, {
     headers: {
       'Content-Type': 'application/x-protobuf',
     },
-    body: buffer,
-    encoding: null,
-    ...toRequestTlsOptions(tls),
+    responseType: 'arraybuffer',
+    ...toAxiosTlsOptions(tls),
   });
+  const body = new Uint8Array(response.data);
 
   const message = AndroidCheckinResponse.decode(body);
 
@@ -135,24 +139,23 @@ async function postRegister({
   onTransientFailure,
 }: PostRegisterOptions): Promise<string> {
   const { androidId, securityToken } = getAuth();
-  const response = await request({
-    url: REGISTER_URL,
-    method: 'POST',
+  const response = await axios.post<string>(REGISTER_URL, new URLSearchParams(body).toString(), {
     headers: {
       Authorization: `AidLogin ${androidId}:${securityToken}`,
       'Content-Type': 'application/x-www-form-urlencoded',
       'User-Agent':
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3234.0 Safari/537.36',
     },
-    form: body,
-    ...toRequestTlsOptions(tls),
+    responseType: 'text',
+    ...toAxiosTlsOptions(tls),
   });
+  const responseBody = response.data;
 
-  if (response.includes('Error')) {
-    console.warn(`GCM register request has failed with ${response}`);
+  if (responseBody.includes('Error')) {
+    console.warn(`GCM register request has failed with ${responseBody}`);
 
-    if (!isTransientGcmError(response) || retry >= MAX_GCM_REGISTER_RETRIES) {
-      throw new Error(`GCM register has failed with ${response.trim()}`);
+    if (!isTransientGcmError(responseBody) || retry >= MAX_GCM_REGISTER_RETRIES) {
+      throw new Error(`GCM register has failed with ${responseBody.trim()}`);
     }
 
     console.warn(`Retry... ${retry + 1}`);
@@ -162,13 +165,13 @@ async function postRegister({
     return postRegister({ getAuth, body, retry: retry + 1, tls, onTransientFailure });
   }
 
-  return response;
+  return responseBody;
 }
 
 async function loadProtoFile(): Promise<void> {
   if (root) return;
 
-  root = await protobuf.load(path.join(__dirname, 'checkin.proto'));
+  root = loadProtoJson(checkinDescriptor);
 }
 
 function getCheckinRequest(androidId?: string, securityToken?: string): Uint8Array {

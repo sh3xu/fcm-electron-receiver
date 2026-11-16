@@ -1,4 +1,6 @@
+import https from 'https';
 import type tls from 'tls';
+import type { AxiosRequestConfig } from 'axios';
 
 export interface TlsConfig {
   ca?: string | Buffer | Array<string | Buffer>;
@@ -6,18 +8,16 @@ export interface TlsConfig {
   rejectUnauthorized?: boolean;
 }
 
-export function toRequestTlsOptions(tlsConfig?: TlsConfig): Record<string, unknown> {
+export function toAxiosTlsOptions(tlsConfig?: TlsConfig): Pick<AxiosRequestConfig, 'httpsAgent'> {
   if (!tlsConfig) {
     return {};
   }
 
   return {
-    ca: tlsConfig.ca,
-    rejectUnauthorized: tlsConfig.rejectUnauthorized,
-    agentOptions: {
+    httpsAgent: new https.Agent({
       ca: tlsConfig.ca,
       rejectUnauthorized: tlsConfig.rejectUnauthorized,
-    },
+    }),
   };
 }
 

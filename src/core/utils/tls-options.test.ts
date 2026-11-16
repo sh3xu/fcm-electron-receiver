@@ -1,28 +1,22 @@
 import { describe, expect, it } from 'vitest';
 
-import { toRequestTlsOptions, toTlsConnectOptions } from './tls-options.js';
+import { toAxiosTlsOptions, toTlsConnectOptions } from './tls-options.js';
 
 describe('tls-options', () => {
-  it('returns empty request options when tls config is missing', () => {
-    expect(toRequestTlsOptions()).toEqual({});
+  it('returns empty axios options when tls config is missing', () => {
+    expect(toAxiosTlsOptions()).toEqual({});
   });
 
-  it('maps ca and rejectUnauthorized for HTTP clients', () => {
+  it('maps ca and rejectUnauthorized into an httpsAgent for axios', () => {
     const ca = '-----BEGIN CERTIFICATE-----\nTEST\n-----END CERTIFICATE-----';
-
-    expect(
-      toRequestTlsOptions({
-        ca,
-        rejectUnauthorized: false,
-      }),
-    ).toEqual({
+    const options = toAxiosTlsOptions({
       ca,
       rejectUnauthorized: false,
-      agentOptions: {
-        ca,
-        rejectUnauthorized: false,
-      },
     });
+
+    expect(options.httpsAgent).toBeDefined();
+    expect(options.httpsAgent?.options.ca).toBe(ca);
+    expect(options.httpsAgent?.options.rejectUnauthorized).toBe(false);
   });
 
   it('includes SNI servername for MCS TLS connections', () => {

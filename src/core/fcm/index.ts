@@ -1,9 +1,9 @@
+import axios from 'axios';
 import crypto from 'crypto';
-import request from 'request-promise';
 
 import { escape } from '../utils/base64.js';
 import { type FirebaseCredentials } from '../register.js';
-import { toRequestTlsOptions, type TlsConfig } from '../utils/tls-options.js';
+import { toAxiosTlsOptions, type TlsConfig } from '../utils/tls-options.js';
 
 const FCM_ENDPOINT = 'https://fcm.googleapis.com/fcm/send';
 const FCM_REGISTRATION_ENDPOINT = 'https://fcmregistrations.googleapis.com/v1';
@@ -63,26 +63,27 @@ async function registerRequest(
   gcmToken: string,
   keys: { authSecret: string; publicKey: string },
 ): Promise<string> {
-  const response = await request({
-    url: `${FCM_REGISTRATION_ENDPOINT}/projects/${credentials.projectId}/registrations`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': credentials.apiKey,
-      'x-goog-firebase-installations-auth': installationAuthToken,
-    },
-    body: JSON.stringify({
+  const response = await axios.post<{ token?: string }>(
+    `${FCM_REGISTRATION_ENDPOINT}/projects/${credentials.projectId}/registrations`,
+    {
       web: {
         applicationPubKey: credentials.vapidKey || '',
         auth: keys.authSecret.replace(/=/g, '').replace(/\+/g, '').replace(/\//g, ''),
         endpoint: `${FCM_ENDPOINT}/${gcmToken}`,
         p256dh: keys.publicKey.replace(/=/g, '').replace(/\+/g, '').replace(/\//g, ''),
       },
-    }),
-    ...toRequestTlsOptions(tlsConfig),
-  });
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': credentials.apiKey,
+        'x-goog-firebase-installations-auth': installationAuthToken,
+      },
+      ...toAxiosTlsOptions(tlsConfig),
+    },
+  );
 
-  const parsedResponse = JSON.parse(response);
+  const parsedResponse = response.data;
 
   if (!parsedResponse || !parsedResponse.token) {
     console.error(`Failed to get FCM token: ${parsedResponse}`);
@@ -95,29 +96,30 @@ async function registerRequest(
 async function installRequest(): Promise<string> {
   const fid = await generateFirebaseFID();
 
-  const response = await request({
-    url: `${FCM_INSTALLATION_ENDPOINT}/projects/${credentials.projectId}/installations`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-firebase-client': Buffer.from(
-        JSON.stringify({
-          heartbeats: [],
-          version: 2,
-        }),
-      ).toString('base64'),
-      'x-goog-api-key': credentials.apiKey,
-    },
-    body: JSON.stringify({
+  const response = await axios.post<{ authToken?: { token?: string } }>(
+    `${FCM_INSTALLATION_ENDPOINT}/projects/${credentials.projectId}/installations`,
+    {
       appId: credentials.appId,
       authVersion: 'FIS_v2',
       fid,
       sdkVersion: 'w:0.6.4',
-    }),
-    ...toRequestTlsOptions(tlsConfig),
-  });
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-firebase-client': Buffer.from(
+          JSON.stringify({
+            heartbeats: [],
+            version: 2,
+          }),
+        ).toString('base64'),
+        'x-goog-api-key': credentials.apiKey,
+      },
+      ...toAxiosTlsOptions(tlsConfig),
+    },
+  );
 
-  const parsedResponse = JSON.parse(response);
+  const parsedResponse = response.data;
 
   if (!parsedResponse || !parsedResponse.authToken || !parsedResponse.authToken.token) {
     console.error(`Failed to get auth token: ${parsedResponse}`);
