@@ -1,0 +1,41 @@
+src/core/gcm/checkin.json
+  s_747067564f4cd7::t_df79ab887b9ce7 1-277
+src/core/gcm/index.ts
+  s_747067564f4cd7::t_ba5ca6404dcb1e 7,9
+  s_747067564f4cd7::t_ba8dadbf5d819b 121
+README.md
+  s_747067564f4cd7::t_6042ff2aaeb1f8 74-77
+src/core/utils/parser.ts
+  s_747067564f4cd7::t_671530f7c564c1 43
+  s_747067564f4cd7::t_ae4efc86d1c4de 11-12
+afterBuild.js
+  s_747067564f4cd7::t_3b83278855958a 1-3
+src/core/utils/mcs.json
+  s_747067564f4cd7::t_df79ab887b9ce7 1-558
+src/core/client.ts
+  s_747067564f4cd7::t_16ad852868849f 11-12
+  s_747067564f4cd7::t_5e2491e22d8504 60
+src/core/utils/load-proto.ts
+  s_747067564f4cd7::t_733014f6860bcc 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7c68a9023b48e5962ed67e7ba1860f957a6611f1",
+  "prompts": {},
+  "humans": {
+    "h_54cccc4af8e4fc": {
+      "author": "sh3xu <s43khu@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_747067564f4cd7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a19d7632-9106-469f-a736-2f847473093c",
+        "model": "default"
+      },
+      "human_author": "sh3xu <s43khu@gmail.com>"
+    }
+  }
+}
