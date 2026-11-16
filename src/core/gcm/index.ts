@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Long from 'long';
-import path from 'path';
 import protobuf from 'protobufjs';
 
 import fcmKey from '../fcm/server-key.js';
@@ -12,7 +11,9 @@ import {
   POST_CHECKIN_DELAY_MS,
   shouldRecheckIn,
 } from '../utils/gcm-retry.js';
+import { loadProtoJson } from '../utils/load-proto.js';
 import { waitFor } from '../utils/timeout.js';
+import checkinDescriptor from './checkin.json';
 
 // HACK: fix PHONE_REGISTRATION_ERROR when bundled with webpack
 // https://github.com/dcodeIO/protobuf.js#browserify-integration
@@ -154,7 +155,7 @@ async function postRegister({
 async function loadProtoFile(): Promise<void> {
   if (root) return;
 
-  root = await protobuf.load(path.join(__dirname, 'checkin.proto'));
+  root = loadProtoJson(checkinDescriptor);
 }
 
 function getCheckinRequest(androidId?: string, securityToken?: string): Uint8Array {
